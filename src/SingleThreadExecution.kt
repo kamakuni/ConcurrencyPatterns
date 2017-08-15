@@ -3,9 +3,9 @@
  */
 class Gate {
 
-    var counter = 0
-    var name = ""
-    var address = ""
+    private var counter = 0
+    private var name = ""
+    private var address = ""
 
     @Synchronized
     fun pass(name: String, address: String) {
@@ -22,7 +22,7 @@ class Gate {
     }
 }
 
-class User(val gate: Gate, val name:String, val address:String): Runnable {
+class User(private val gate: Gate,private val name:String,private val address:String): Runnable {
 
     override fun run() {
         while(true) {
