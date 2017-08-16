@@ -1,3 +1,5 @@
+package jp.co.kamakuni.singlethreadexecution
+
 /**
  * Created by kamakuni on 2017/08/15.
  */
