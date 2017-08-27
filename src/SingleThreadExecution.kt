@@ -17,7 +17,7 @@ class Gate {
     }
     @Synchronized
     override fun toString() = "No.$counter: $name, $address"
-    fun check() {
+    private fun check() {
         if (this.name[0] != this.address[0]){
             println("****** BROKEN ******: $name, $address")
         }
