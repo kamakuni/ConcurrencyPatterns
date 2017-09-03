@@ -7,20 +7,20 @@ import java.util.concurrent.Semaphore
  */
 
 class Mutex{
+    private val semaphore = Semaphore(1)
     fun lock(){
-        // NOP
+        semaphore.acquire()
     }
     fun unlock(){
-        // NOP
+        semaphore.release()
     }
 }
 
-class Gate {
+class Gate(private val mutex: Mutex) {
 
     private var counter = 0
     private var name = ""
     private var address = ""
-    private val mutex: Mutex = Mutex()
 
     fun pass(name: String, address: String) {
         mutex.lock()
@@ -34,12 +34,7 @@ class Gate {
     }
 
     override fun toString():String {
-        mutex.lock()
-        try {
-            return "No.$counter: $name, $address"
-        } finally {
-            mutex.unlock()
-        }
+        return "No.$counter: $name, $address"
     }
 
     private fun check() {
@@ -59,7 +54,7 @@ class User(private val gate: Gate,private val name:String,private val address:St
 }
 
 fun main(args: Array<String>) {
-    val gate = Gate()
+    val gate = Gate(Mutex())
     Thread(User(gate,"Alice","Alaska")).start()
     Thread(User(gate,"Bobby","Brazil")).start()
     Thread(User(gate,"Chris","Canada")).start()
