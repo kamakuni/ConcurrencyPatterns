@@ -30,6 +30,7 @@ class RequestQueue {
 
 class TalkThread(private val input:RequestQueue, private val output:RequestQueue, private val name:String): Runnable {
     override fun run() {
+        print("${Thread.currentThread().name}:BEGIN")
         for(i in 0 until 10){
             val request1 = input.getRequest()
             print("${Thread.currentThread().name} gets $request1")
@@ -45,5 +46,5 @@ fun main(args: Array<String>){
     val request1 = RequestQueue()
     val request2 = RequestQueue()
     Thread(TalkThread(request1, request2, "Alice")).start()
-    Thread(TalkThread(request2, request1, "Boby")).start()
+    //Thread(TalkThread(request2, request1, "Bobby")).start()
 }
