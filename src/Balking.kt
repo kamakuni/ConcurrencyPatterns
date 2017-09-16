@@ -1,6 +1,8 @@
 package jp.co.kamakuni.balking
 
 import java.io.File
+import java.io.IOException
+import java.util.*
 
 class Data (val filename: String, var content: String){
     private var changed: Boolean = true
@@ -27,12 +29,55 @@ class Data (val filename: String, var content: String){
     }
 }
 
-class Changer: Runnable{
+class Changer: Thread{
 
+    private val threadName:String
+    private val data:Data
+
+    constructor(threadName: String, data: Data): super(threadName){
+        this.threadName = threadName
+        this.data = data
+    }
+
+    override fun run() {
+        try{
+            while(true){
+                data.save()
+                Thread.sleep(1000)
+            }
+        } catch (e: IOException){
+            e.printStackTrace()
+        } catch (e: InterruptedException){
+            e.printStackTrace()
+        }
+    }
 }
 
-class Sever: Runnable{
+class Sever: Thread{
 
+    private val threadName: String
+    private val data: Data
+    private val random = Random()
+
+    constructor(threadName: String, data: Data): super(name){
+        this.threadName = threadName
+        this.data = data
+    }
+
+    override fun run() {
+        var i = 0
+        try {
+            while (true) {
+                data.save()
+                Thread.sleep(random.nextInt().toLong())
+                i++
+            }
+        }catch (e: IOException){
+            e.printStackTrace()
+        }catch (e: InterruptedException){
+            e.printStackTrace()
+        }
+    }
 }
 
 fun main(args: Array<String>) {
