@@ -23,13 +23,13 @@ class Data (val filename: String, var content: String){
         }
     }
 
-    fun doSave(){
+    private fun doSave(){
         println("${Thread.currentThread().name} calls doSave, content = $content")
         File(this.filename).writeText(this.content)
     }
 }
 
-class Changer: Thread{
+class Saver: Thread{
 
     private val threadName:String
     private val data:Data
@@ -53,13 +53,13 @@ class Changer: Thread{
     }
 }
 
-class Sever: Thread{
+class Changer: Thread{
 
     private val threadName: String
     private val data: Data
     private val random = Random()
 
-    constructor(threadName: String, data: Data): super(name){
+    constructor(threadName: String, data: Data): super(threadName){
         this.threadName = threadName
         this.data = data
     }
@@ -68,8 +68,9 @@ class Sever: Thread{
         var i = 0
         try {
             while (true) {
+                data.change("No.$i")
+                Thread.sleep(random.nextInt(1000).toLong())
                 data.save()
-                Thread.sleep(random.nextInt().toLong())
                 i++
             }
         }catch (e: IOException){
@@ -81,6 +82,7 @@ class Sever: Thread{
 }
 
 fun main(args: Array<String>) {
-
+    val data = Data("data.txt","(empty)")
+    Changer("Changer",data).start()
+    Saver("Saver",data).start()
 }
-
