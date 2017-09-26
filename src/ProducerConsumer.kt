@@ -1,6 +1,7 @@
 package jp.co.kamakuni.producerconsumer
 
 import java.util.*
+import java.util.concurrent.ArrayBlockingQueue
 
 class Maker: Thread {
 
@@ -58,7 +59,7 @@ class Eater: Thread {
     }
 }
 
-class Table(private var count: Int){
+/*class Table(private var count: Int){
     private val buffer = arrayOfNulls<String>(count)
     private var head = 0
     private var tail = 0
@@ -86,6 +87,22 @@ class Table(private var count: Int){
         (this as java.lang.Object).notifyAll()
         println("${Thread.currentThread().name} takes $cake")
         return cake
+    }
+}*/
+
+class Table: ArrayBlockingQueue<String> {
+
+    constructor(count: Int):super(count)
+
+    override fun put(cake:String) {
+        println("${Thread.currentThread().name} puts $cake")
+        super.put(cake)
+    }
+
+    override fun take(): String {
+        val cake = super.take()
+        println("${Thread.currentThread().name} take $cake")
+        return super.take()
     }
 }
 
